@@ -1,0 +1,3 @@
+[console_scripts]
+gif-for-cli = gif_for_cli.__main__:main
+

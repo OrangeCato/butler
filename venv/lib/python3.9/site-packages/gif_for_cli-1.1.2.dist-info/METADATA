@@ -1,0 +1,32 @@
+Metadata-Version: 2.1
+Name: gif-for-cli
+Version: 1.1.2
+Summary: Render an animated GIF to your command line terminal.
+Home-page: https://github.com/google/gif-for-cli
+Author: Seán Hayes
+Author-email: sth@google.com
+License: UNKNOWN
+Keywords: gif cli terminal ascii ansi
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Topic :: Artistic Software
+Classifier: Topic :: Multimedia :: Graphics :: Graphics Conversion
+Classifier: Topic :: Multimedia :: Graphics :: Presentation
+Classifier: Topic :: Multimedia :: Graphics :: Viewers
+Classifier: Topic :: Multimedia :: Video :: Conversion
+Classifier: Topic :: Multimedia :: Video :: Display
+Classifier: Topic :: Terminals
+Classifier: Topic :: Utilities
+Requires-Dist: Pillow (>=5.1.0)
+Requires-Dist: requests (>=2.18.4)
+Requires-Dist: x256 (>=0.0.3)
+
+UNKNOWN
+
+
