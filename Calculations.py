@@ -1,8 +1,9 @@
+from pickle import NONE
 import sqlite3
 import time
 from datetime import datetime
 import threading
-from colorama import init, Fore, Style
+from colorama import init, Fore
 
 init(autoreset=True)
 
@@ -12,6 +13,14 @@ def connect_to_database(db_path='/Users/alessandrazamora/butler/databases/butler
 
 def close_connection(conn):
     conn.close()
+    
+def get_user_id(username):
+    conn = connect_to_database()
+    c = conn.cursor()
+    c.execute('SELECT id FROM users WHERE name = ?', (username,))
+    user_id = c.fetchone()
+    close_connection(conn)
+    return user_id[0] if user_id else None
 
 def get_tasks():
     conn = connect_to_database()
@@ -32,8 +41,9 @@ def get_task_id(task_name):
 def log_task_completion(user_id, task_id, date_added, total_length):
     conn = connect_to_database()
     c = conn.cursor()
+    current_time = datetime.now().strftime('%H:%M')
     c.execute("INSERT INTO logs (user_id, task_id, date, time, length) VALUES (?, ?, ?, ?, ?)",
-              (user_id, task_id, date_added, total_length))
+              (user_id, task_id, date_added, current_time, total_length))
     conn.commit()
     close_connection(conn)
 
@@ -52,7 +62,7 @@ def print_timer(start_time, timer_running_event):
                 last_time = new_time
 
 # Start task
-def start_task(username):
+def start_task(username, user_id):
     print(Fore.GREEN + f"Hello, {username}! Let's start a task." + Fore.RESET)
 
     tasks = get_tasks()
@@ -100,7 +110,8 @@ def start_task(username):
             total_length_minutes = int(time_taken // 60)
             log_choice = input(Fore.YELLOW + "Press L to log recorded task, C to resume timer or T to terminate task:" + Fore.RESET)
             if log_choice.upper() == 'L':
-                log_task_completion(1, task_id, time_taken, date_added, start_time, total_length_minutes)
+                log_id = int(time.time())
+                log_task_completion(user_id, task_id, date_added, total_length_minutes)
                 print(Fore.GREEN + "Task logged successfully!" + Fore.RESET)
             elif log_choice.upper() == 'C':
                 timer_running_event.set()
@@ -119,7 +130,8 @@ def start_task(username):
             print(Fore.CYAN + f"Total length of the task: {total_length_minutes} minutes." + Fore.RESET)
             log_choice = input(Fore.YELLOW + "Press L to log recorded task or T to terminate task." + Fore.RESET)
             if log_choice.upper() == 'L':
-                log_task_completion(1, task_id, time_taken, date_added, start_time, total_length_minutes)
+                log_id = int(time.time())
+                log_task_completion(user_id, task_id, date_added, total_length_minutes)
                 print(Fore.GREEN + "Task logged successfully!" + Fore.RESET)
             elif log_choice.upper() == 'T':
                 print(Fore.YELLOW + "Log deleted." + Fore.RESET)
@@ -127,7 +139,7 @@ def start_task(username):
                 print(Fore.RED + 'Invalid input. Please try again.' + Fore.RESET)
             break
         else:
-            timer_running_event.set()
+            timer_running_event.set
             print(Fore.RED + "Invalid input. Press S to stop and F to finish task." + Fore.RESET)
 
     # Join the timer thread to avoid leaving it running
@@ -135,7 +147,8 @@ def start_task(username):
 
 def main():
     username = input(Fore.MAGENTA + "Enter your username:" + Fore.RESET)
-    start_task(username)
+    user_id = get_user_id(username)
+    start_task(username, user_id)
 
 if __name__ == "__main__":
     main()
