@@ -1,7 +1,7 @@
 import sqlite3
 from colorama import init, Fore, Style
-from Calculations import get_user_id, start_task
-from spends import start_expense_log
+from task_calculations import get_user_id, start_task
+from expenses import start_expense_log
 
 init(autoreset=True)
 

@@ -4,7 +4,7 @@ import sqlite3
 import time
 from datetime import datetime
 from colorama import init, Fore, Style
-from Calculations import connect_to_database, get_task_id, log_task_completion, get_tasks
+from task_calculations import connect_to_database, get_task_id, log_task_completion, get_tasks
 
 # Initialize colorama
 init()
