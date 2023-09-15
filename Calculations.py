@@ -7,13 +7,16 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
+
 def connect_to_database(db_path='/Users/alessandrazamora/butler/databases/butler_database.db'):
     conn = sqlite3.connect(db_path)
     return conn
 
+
 def close_connection(conn):
     conn.close()
-    
+
+
 def get_user_id(username):
     conn = connect_to_database()
     c = conn.cursor()
@@ -21,6 +24,7 @@ def get_user_id(username):
     user_id = c.fetchone()
     close_connection(conn)
     return user_id[0] if user_id else None
+
 
 def get_tasks():
     conn = connect_to_database()
@@ -30,6 +34,7 @@ def get_tasks():
     close_connection(conn)
     return tasks_rows
 
+
 def get_task_id(task_name):
     conn = connect_to_database()
     c = conn.cursor()
@@ -37,6 +42,7 @@ def get_task_id(task_name):
     task_id = c.fetchone()
     close_connection(conn)
     return task_id[0] if task_id else None
+
 
 def log_task_completion(user_id, task_id, date_added, total_length):
     conn = connect_to_database()
@@ -48,6 +54,8 @@ def log_task_completion(user_id, task_id, date_added, total_length):
     close_connection(conn)
 
 # Prints running timer
+
+
 def print_timer(start_time, timer_running_event):
     last_time = ""
     while True:
@@ -58,10 +66,13 @@ def print_timer(start_time, timer_running_event):
             seconds = int(elapsed_time % 60)
             new_time = f"Time running: {minutes:02d}:{seconds:02d}"
             if new_time != last_time:
-                print("\033[K" + Fore.MAGENTA + new_time, end='\r' + Fore.RESET)
+                print("\033[K" + Fore.MAGENTA +
+                      new_time, end='\r' + Fore.RESET)
                 last_time = new_time
 
 # Start task
+
+
 def start_task(username, user_id):
     print(Fore.GREEN + f"Hello, {username}! Let's start a task." + Fore.RESET)
 
@@ -86,18 +97,20 @@ def start_task(username, user_id):
         conn.commit()
         close_connection(conn)
         task_id = get_task_id(new_task_name)
-        print(Fore.MAGENTA + f"New task '{new_task_name}' added with ID {task_id}." + Fore.RESET)
+        print(Fore.MAGENTA +
+              f"New task '{new_task_name}' added with ID {task_id}." + Fore.RESET)
     else:
         task_id = tasks[int(choice) - 1][0]
         task_name = tasks[int(choice) - 1][1]
         print(Fore.CYAN + f"Selected task: {task_name}" + Fore.RESET)
         date_added = datetime.now().strftime('%Y-%m-%d')
         start_time = time.time()
-        print(Fore.GREEN + "Time started. Press S to stop or F to finish task." + Fore.RESET)
+        print(Fore.GREEN + "Time started. Press S to stop, L to log task or T to terminate." + Fore.RESET)
         # Start the timer display
         timer_running_event = threading.Event()
         timer_running_event.set()
-        timer_thread = threading.Thread(target=print_timer, args=(start_time, timer_running_event))
+        timer_thread = threading.Thread(
+            target=print_timer, args=(start_time, timer_running_event))
         timer_thread.start()
 
     while True:
@@ -106,32 +119,42 @@ def start_task(username, user_id):
             timer_running_event.clear()
             stop_time = time.time()
             time_taken = round(stop_time - start_time, 2)
-            print(Fore.YELLOW + f"Task stopped at {time_taken} seconds." + Fore.RESET)
+            print(Fore.YELLOW +
+                  f"Task stopped at {time_taken} seconds." + Fore.RESET)
             total_length_minutes = int(time_taken // 60)
-            log_choice = input(Fore.YELLOW + "Press L to log recorded task, C to resume timer or T to terminate task:" + Fore.RESET)
+            log_choice = input(
+                Fore.YELLOW + "Press L to log recorded task, R to resume timer or T to terminate task:" + Fore.RESET)
             if log_choice.upper() == 'L':
                 log_id = int(time.time())
-                log_task_completion(user_id, task_id, date_added, total_length_minutes)
+                log_task_completion(
+                    user_id, task_id, date_added, total_length_minutes)
                 print(Fore.GREEN + "Task logged successfully!" + Fore.RESET)
-            elif log_choice.upper() == 'C':
+            elif log_choice.upper() == 'R':
                 timer_running_event.set()
+                print(
+                    Fore.YELLOW + "Timer is running. Press S to stop or T to terminate task." + Fore.RESET)
                 print('')
             elif log_choice.upper() == 'T':
                 print(Fore.YELLOW + "Log deleted." + Fore.RESET)
+                break
             else:
                 print(Fore.RED + 'Invalid input. Please try again' + Fore.RESET)
-            break
+                break
         elif user_input.upper() == 'F':
             timer_running_event.clear()
             stop_time = time.time()
             time_taken = round(stop_time - start_time, 2)
-            print(Fore.MAGENTA + f"Task finished, time taken: {time_taken} seconds." + Fore.RESET)
+            print(
+                Fore.MAGENTA + f"Task finished, time taken: {time_taken} seconds." + Fore.RESET)
             total_length_minutes = int(time_taken // 60)
-            print(Fore.CYAN + f"Total length of the task: {total_length_minutes} minutes." + Fore.RESET)
-            log_choice = input(Fore.YELLOW + "Press L to log recorded task or T to terminate task." + Fore.RESET)
+            print(
+                Fore.CYAN + f"Total length of the task: {total_length_minutes} minutes." + Fore.RESET)
+            log_choice = input(
+                Fore.YELLOW + "Press L to log recorded task or T to terminate task." + Fore.RESET)
             if log_choice.upper() == 'L':
                 log_id = int(time.time())
-                log_task_completion(user_id, task_id, date_added, total_length_minutes)
+                log_task_completion(
+                    user_id, task_id, date_added, total_length_minutes)
                 print(Fore.GREEN + "Task logged successfully!" + Fore.RESET)
             elif log_choice.upper() == 'T':
                 print(Fore.YELLOW + "Log deleted." + Fore.RESET)
@@ -140,15 +163,18 @@ def start_task(username, user_id):
             break
         else:
             timer_running_event.set
-            print(Fore.RED + "Invalid input. Press S to stop and F to finish task." + Fore.RESET)
+            print(
+                Fore.RED + "Invalid input. Press S to stop and F to finish task." + Fore.RESET)
 
     # Join the timer thread to avoid leaving it running
     timer_thread.join()
+
 
 def main():
     username = input(Fore.MAGENTA + "Enter your username:" + Fore.RESET)
     user_id = get_user_id(username)
     start_task(username, user_id)
+
 
 if __name__ == "__main__":
     main()

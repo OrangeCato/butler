@@ -1,4 +1,5 @@
 import sqlite3
+from tabulate import tabulate
 
 def test_database_connection():
     try:
@@ -20,9 +21,9 @@ def print_users():
     conn.close()
 
     if users_rows:
+        headers = [desc[0] for desc in c.description]
         print("Users:")
-        for row in users_rows:
-            print(row)
+        print(tabulate(users_rows, headers=headers, tablefmt='grid'))
     else:
         print("No users in the database.")
 
@@ -35,9 +36,9 @@ def print_tasks():
     conn.close()
 
     if tasks_rows:
+        headers = [desc[0] for desc in c.description]
         print("Tasks:")
-        for row in tasks_rows:
-            print(row)
+        print(tabulate(tasks_rows, headers=headers, tablefmt='grid'))
     else:
         print("No tasks in the database.")
 
@@ -50,9 +51,9 @@ def print_logs():
     conn.close()
 
     if logs_rows:
+        headers = [desc[0] for desc in c.description]
         print("Logs:")
-        for row in logs_rows:
-            print(row)
+        print(tabulate(logs_rows, headers=headers, tablefmt='grid'))
     else:
         print("No logs in the database.")
 
