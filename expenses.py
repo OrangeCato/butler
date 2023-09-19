@@ -111,7 +111,7 @@ def is_valid_amount(amount_str):
 
 def start_expense_log(username, user_id):
     print(Fore.GREEN +
-          f"Hello, {username}! Let's add an expense." + Fore.RESET)
+          f"Hello, {username}! Let's add an expense. Choose from the following:" + Fore.RESET)
 
     conn = connect_to_database()
     category_id = None
@@ -122,12 +122,12 @@ def start_expense_log(username, user_id):
         for idx, category in enumerate(categories, start=1):
             print(f"{idx}. {category[1]}")
 
-        print(Fore.YELLOW + "0. Add new category" + Fore.RESET)
         print(Fore.YELLOW + "or...")
+        print(Fore.YELLOW + "0. Add new category" + Fore.RESET)
         print(Fore.RED + "X. Cancel" + Fore.RESET)
 
         choice = input(
-            Fore.CYAN + "Enter category number (0 to add new, X to cancel): " + Fore.RESET)
+            Fore.CYAN + "Enter number(or X to cancel): " + Fore.RESET)
 
         if choice == '0':
             new_category_name = input(
@@ -147,16 +147,16 @@ def start_expense_log(username, user_id):
 
             subcategories = get_subcategories(conn, category_id)
             print(Fore.LIGHTMAGENTA_EX +
-                  "Subcategories for Selected Category:" + Fore.RESET)
+                  "Choose from the list of the selected category:" + Fore.RESET)
             for idx, subcategory in enumerate(subcategories, start=1):
                 print(f"{idx}. {subcategory[1]}")
 
-            print(Fore.YELLOW + "0. Add new subcategory" + Fore.RESET)
             print(Fore.YELLOW + "or...")
+            print(Fore.YELLOW + "0. Add new subcategory" + Fore.RESET)
             print(Fore.RED + "X. Cancel" + Fore.RESET)
 
             subcategory_choice = input(
-                Fore.CYAN + "Enter subcategory number (0 to add new, X to cancel): " + Fore.RESET)
+                Fore.CYAN + "Enter number (or X to cancel): " + Fore.RESET)
 
             if subcategory_choice == '0':
                 new_subcategory_name = input(
