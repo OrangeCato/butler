@@ -35,11 +35,6 @@ def add_task():
     conn.commit()
     close_connection(conn)
 
-# add categories
-# Function to add subcategories
-
-# Function to add a new category
-
 
 def add_category():
     category_name = input("Enter category name: ")
