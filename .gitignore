@@ -1,0 +1,8 @@
+# Ignore venv directory
+/venv
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore db
+/databases/butler_database.db
